@@ -1,0 +1,91 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flaskapi-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flaskapi
+  template:
+    metadata:
+      labels:
+        app: flaskapi
+    spec:
+      containers:
+        - name: flaskapi
+          image: your-docker-image:tag
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_ENV
+              value: "production"
+            # Add other environment variables as needed
+---
+
+
+# Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: flaskapi-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: flaskapi-deployment
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 80
+---
+# Network Policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: flaskapi-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: flaskapi
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              role: frontend
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              role: database
+---
+# Service Account with IAM Role and Policy
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: flaskapi-service-account
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: flaskapi-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: flaskapi-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: flaskapi-service-account
+roleRef:
+  kind: Role
+  name: flaskapi-role
+  apiGroup: rbac.authorization.k8s.io

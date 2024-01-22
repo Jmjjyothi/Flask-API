@@ -1,0 +1,46 @@
+# StatefulSet for Database
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: database-statefulset
+spec:
+  serviceName: "database"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: database
+          image: your-database-image:tag
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "flaskapi"
+            - name: POSTGRES_USER
+              value: "your-username"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: POSTGRES_PASSWORD
+---
+# Secret for Database Password
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database-secrets
+type: Opaque
+data:
+  POSTGRES_PASSWORD: base64-encoded-password
+---
+# Service for Database
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service

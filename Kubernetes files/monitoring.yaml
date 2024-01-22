@@ -1,0 +1,33 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: flaskapi-monitor
+  labels:
+    team: frontend
+spec:
+  selector:
+    matchLabels:
+      app: flaskapi
+  endpoints:
+    - port: http
+      path: /metrics
+---
+# Prometheus Rule (Alert)
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: flaskapi-alerts
+  labels:
+    prometheus: k8s
+spec:
+  groups:
+    - name: flaskapi.rules
+      rules:
+        - alert: HighRequestLatency
+          expr: job:request_latency_seconds:mean5m{job="flaskapi"} > 0.5
+          for: 10m
+          labels:
+            severity: page
+          annotations:
+            summary: High request latency on {{ $labels.instance }}
+            description: '{{ $labels.instance }} has a request latency above 0.5'
