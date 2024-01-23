@@ -80,7 +80,7 @@ resource "aws_security_group" "kubernetes_nodes_sg" {
 # Launch Configuration for Kubernetes Nodes
 resource "aws_launch_configuration" "kubernetes_nodes_lc" {
   name = "kubernetes-nodes-lc"
-  image_id = "ami-xxxxxxxxxxxxxxxx"  # Specify a valid Amazon Linux AMI
+  image_id = "ami-xxxxxxxxxxxxxxxx"  
   instance_type = "t2.micro"
   security_groups = [aws_security_group.kubernetes_nodes_sg.id]
 
