@@ -1,4 +1,4 @@
-# Deployment
+# This is for the deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,11 +21,11 @@ spec:
           env:
             - name: FLASK_ENV
               value: "production"
-            # Add other environment variables as needed
+            
 ---
 
 
-# Horizontal Pod Autoscaler
+# this is for thhe Hpa
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -43,7 +43,7 @@ spec:
         name: cpu
         targetAverageUtilization: 80
 ---
-# Network Policy
+# this is for the network policy
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -63,7 +63,7 @@ spec:
             matchLabels:
               role: database
 ---
-# Service Account with IAM Role and Policy
+# this for  a Service account with IAM role and policy
 apiVersion: v1
 kind: ServiceAccount
 metadata:
