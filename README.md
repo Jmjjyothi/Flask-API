@@ -27,7 +27,6 @@ Welcome to the Flask API Service project! This project is a simple HTTP API serv
 
 ## Table of Contents
 
-- [Project Overview](#project-overview)
 - [Setup and Development](#setup-and-development)
   - [Prerequisites](#prerequisites)
   - [Local Development](#local-development)
@@ -35,9 +34,6 @@ Welcome to the Flask API Service project! This project is a simple HTTP API serv
 - [Kubernetes Deployment](#kubernetes-deployment)
 - [Jenkins CI/CD Pipeline](#jenkins-cicd-pipeline)
 
-## Project Overview
-
-Briefly describe your project, its purpose, and key features. Include any relevant badges (build status, version, etc.) and a project logo if available.
 
 ## Setup and Development
 
